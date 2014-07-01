@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwikidoc>
+<web>FTPCode</web>
+<name>UserList</name>
+<language></language>
+<defaultLanguage>en</defaultLanguage>
+<translation>0</translation>
+<parent></parent>
+<creator>XWiki.Admin</creator>
+<author>XWiki.Admin</author>
+<customClass></customClass>
+<contentAuthor>XWiki.Admin</contentAuthor>
+<creationDate>1403864899000</creationDate>
+<date>1404135236000</date>
+<contentUpdateDate>1404135236000</contentUpdateDate>
+<version>21.1</version>
+<title></title>
+<defaultTemplate></defaultTemplate>
+<validationScript></validationScript>
+<comment></comment>
+<minorEdit>false</minorEdit>
+<syntaxId>xwiki/2.1</syntaxId>
+<hidden>false</hidden>
+<content>{{velocity}}
+#if ($request.deleteaccount)
+  #set ($space = $request.deleteaccount)
+  You have asked the removal of the $space account. 
+  #if (!$request.confirm)
+    **THIS IS A DRY RUN.** Nothing is being deleted yet. Below is a listing of the actions that will be taken. In order to continue, you must confirm using the button on the bottom of the page.
+  #else 
+    **Running delete procedure...**
+  #end
+  
+  #set ($queryParameters = [])
+  #set ($discard = $queryParameters.add("${space}"))
+  #set($attachments = $xwiki.searchAttachments("where doc.space=?", 0, 0, $queryParameters))
+Attachments:
+  #foreach ($attachment in $attachments)
+   * Deleting attachment $attachment.filename from the $attachment.getDocument().name Page.
+    #if ($request.confirm)
+      #set ($discard = $attachment.getDocument().deleteAttachment($attachment,$context))
+      #set ($discard = $attachment.getDocument().save())
+      Done!
+    #end
+  #end
+
+Pages:
+ #set ($pages = $xwiki.getSpaceDocsName($space))
+  #foreach ($page in $pages)
+   * Deleting page $page from the $space Space.
+    #if ($request.confirm)
+      #set ($documentReference = $services.model.createDocumentReference($context.getDatabase(),$space,$page))
+      #set ($document = $xwiki.getDocument($documentReference))
+      ## Delete all translations pages.
+      $xwiki.getXWiki().deleteAllDocuments($document.getDocument(), $xcontext.getContext())
+
+      Done!
+    #end
+  #end
+
+Space:
+  * Deleting the $space Space.
+##Handled by the above code
+  
+User:
+   * Deleting the $space user.
+    #if ($request.confirm)
+      #set ($documentReference = $services.model.createDocumentReference($context.getDatabase(),'XWiki',$space))
+      #set ($document = $xwiki.getDocument($documentReference))
+      $document.delete()
+      Done!
+    #end
+
+Password:
+   * Deleting password of $space user.
+   #if ($request.confirm)
+      #set ($passwordReference = $services.model.createDocumentReference($context.getDatabase(),'FTPCode','Passwords'))
+      #set ($passwords = $xwiki.getDocument($passwordReference))
+      #set ($obj = $passwords.getObject('Encryption.ProtectedFieldClass','name',$space))
+      $passwords.removeObject($obj)
+      $passwords.save()
+      Done!
+   #end
+
+#if (!$request.confirm)
+  **If you are sure you want to remove this username, press the link below:**
+  [[Remove the $space username and all the associated Attachments, Pages and Spaces&gt;&gt;$doc.fullName||queryString="deleteaccount=${space}&amp;confirm=1"]]
+#end
+----
+[[Go Back to the main page&gt;&gt;Main.WebHome]]
+#else
+
+  #set ($query = 'where 1=1 ')
+  #set ($queryParameters = [])
+  #set ($blacklistedSpaces = ['Admin','FTPCode','AppWithinMinutes','Blog','Dashboard','Encryption','Main','Sandbox','Invitation','Import', 'Panels', 'Scheduler', 'Stats', 'XAppClasses', 'XAppSheets', 'XAppTemplates', 'XWiki', 'WatchCode', 'WatchSheets', 'XApp', 'WatchAdmin', 'Watch', 'ColorThemes', 'AnnotationCode', 'WikiManager'])
+  #foreach ($blacklistedSpace in $blacklistedSpaces)
+    #set ($query = "${query} and doc.space &lt;&gt; ?")
+    #set ($discard = $queryParameters.add($blacklistedSpace))
+  #end
+  #set ($spaces =  $xwiki.searchSpacesNames($query, 0, 0, $queryParameters))
+|=Space Name(Username)|=Attachment Count|=Attachments Total Size|=Actions
+  #foreach ($space in $spaces)
+    #set ($queryParameters = [])
+    #set ($discard = $queryParameters.add("${space}"))
+    #set($attachments = $xwiki.searchAttachments("where doc.space=?", 0, 0, $queryParameters))
+    #set($attachmentsCount = 0)
+    #set($attachmentsSize = 0)
+    #foreach ($attachment in $attachments)
+      #set ($attachmentsSize = $attachmentsSize + $attachment.filesize)
+      #set ($attachmentsCount = $attachmentsCount + 1)
+    #end
+    #set ($attachmentsSize = $attachmentsSize / 1048576)
+|[[$space&gt;&gt;${space}.WebHome]]|$attachmentsCount|$attachmentsSize MB|[[Delete&gt;&gt;$doc.fullName||queryString="deleteaccount=${space}"]]
+  #end
+#end
+{{/velocity}}</content></xwikidoc>

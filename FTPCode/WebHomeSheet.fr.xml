@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwikidoc>
+<web>FTPCode</web>
+<name>WebHomeSheet</name>
+<language>fr</language>
+<defaultLanguage>en</defaultLanguage>
+<translation>1</translation>
+<parent></parent>
+<creator>XWiki.Admin</creator>
+<author>XWiki.Admin</author>
+<customClass></customClass>
+<contentAuthor>XWiki.Admin</contentAuthor>
+<creationDate>1397144620000</creationDate>
+<date>1404136378000</date>
+<contentUpdateDate>1404136378000</contentUpdateDate>
+<version>2.1</version>
+<title></title>
+<defaultTemplate></defaultTemplate>
+<validationScript></validationScript>
+<comment></comment>
+<minorEdit>false</minorEdit>
+<syntaxId>xwiki/2.1</syntaxId>
+<hidden>false</hidden>
+<content>= Bienvenue dans votre nouvel espace FTP! =
+
+Ce wiki remplace le FTP conventionnel. Vous pouvez l'utiliser pour échanger des fichiers avec l'équipe XWiki.
+
+{{warning}}
+Gardez à l'esprit que chaque fichier joint a une durée de vie limitée (2 mois); Cet endroit ne peut donc pas être utilisé comme solution de stockage à long terme.
+{{/warning}}
+
+{{info}}
+La taille maximum des fichiers est actuellement limitée à 1Go.
+{{/info}}
+
+Pour ajouter un nouveau fichier, il est préférable de créer d'abord une page par "projet", réunissant tous les fichiers ayant en commun une livraison, ou un numéro de projet similaire.
+
+* Ci-dessous, tous les fichiers joints qui vous appartiennent:
+
+{{velocity}}
+#set($ok = $xwiki.jsx.use('FTPCode.AllAttachments'))
+##
+#set($collist = ["filename", "doc.name", "doc.space", "doc.date", "doc.author", "type", "size"])
+#set($colprops = {
+                   "filename"  : { "type" : "text" , "size" : 10 }, 
+                   "doc.name"  : { "type" : "text" , "size" : 10 },
+                   "doc.space"  : { "type" : "text" , "size" : 10 },
+                   "doc.date"  : { "type" : "date" , "size" : 10, "filterable":false},
+                   "doc.author": { "type" : "text" , "size" : 10 },
+                   "type" : {"sortable": false},
+                   "size" : { "type" : "text" , "size" : 10 }
+                 })
+#set($options = { "url":"$xwiki.getURL('FTPCode.AllAttachmentsResults')?xpage=plain&amp;outputSyntax=plain&amp;space=$doc.space",
+                  "callback" : "XWiki.index.displayAttachmentEntry",
+                  "translationPrefix" : "xe.index.attachments." })
+#livetable('allattachments' $collist $colprops $options)
+
+(% id="inaccessibleDocsMessage" class="hidden" %)
+(((
+{{info}}$msg.get("rightsmanager.documentrequireviewrights"){{/info}}
+)))
+
+
+* Ci dessous, toutes les pages vous appartenant. [[Cliquez ici pour en créer une nouvelle&gt;&gt;path:$xwiki.getURL($doc.getSpace().WebHome,'create')]].
+{{/velocity}}
+
+{{spaceindex}}</content></xwikidoc>

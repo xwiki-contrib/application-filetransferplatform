@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package>
+<infos/>
+<name>FileTransferPlatform-1.0</name>
+<description>FTP Wiki</description>
+<licence>LGPL</licence>
+<author>XWiki.Admin</author>
+<version>1.0</version>
+<backupPack>false</backupPack>
+<preserveVersion>false</preserveVersion><files>
+<file defaultAction="0" language="">Main.WebHome</file>
+<file defaultAction="0" language="">Main.WebPreferences</file>
+<file defaultAction="0" language="">XWiki.XWikiPreferences</file>
+<file defaultAction="0" language="">ColorThemes.FTP</file>
+<file defaultAction="0" language="">FTPCode.WebHomeSheet</file>
+<file defaultAction="0" language="fr">FTPCode.WebHomeSheet</file>
+<file defaultAction="0" language="">FTPCode.CreateUser</file>
+<file defaultAction="0" language="">FTPCode.Passwords</file>
+<file defaultAction="0" language="">FTPCode.UserList</file>
+<file defaultAction="0" language="">FTPCode.AllAttachments</file>
+<file defaultAction="0" language="">FTPCode.AllAttachmentsResults</file>
+<file defaultAction="0" language="">FTPCode.KeeperClass</file>
+<file defaultAction="0" language="">FTPCode.FTPTranslations</file>
+<file defaultAction="0" language="en">FTPCode.FTPTranslations</file>
+<file defaultAction="0" language="">FTPCode.WebPreferences</file>
+<file defaultAction="0" language="">FTPCode.Template</file>
+<file defaultAction="0" language="">Scheduler.Attachments Cleaning</file></files></package>

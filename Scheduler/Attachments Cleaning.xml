@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwikidoc>
+<web>Scheduler</web>
+<name>Attachments Cleaning</name>
+<language></language>
+<defaultLanguage>fr</defaultLanguage>
+<translation>0</translation>
+<parent>Scheduler.WebHome</parent>
+<creator>XWiki.Admin</creator>
+<author>XWiki.Admin</author>
+<customClass></customClass>
+<contentAuthor>XWiki.Admin</contentAuthor>
+<creationDate>1372156766000</creationDate>
+<date>1403886510000</date>
+<contentUpdateDate>1384435725000</contentUpdateDate>
+<version>29.1</version>
+<title>Attachments Cleaning</title>
+<defaultTemplate></defaultTemplate>
+<validationScript></validationScript>
+<comment></comment>
+<minorEdit>false</minorEdit>
+<syntaxId>xwiki/2.0</syntaxId>
+<hidden>false</hidden>
+<object>
+<class>
+<name>XWiki.SchedulerJobClass</name>
+<customClass></customClass>
+<customMapping></customMapping>
+<defaultViewSheet></defaultViewSheet>
+<defaultEditSheet></defaultEditSheet>
+<defaultWeb></defaultWeb>
+<nameField></nameField>
+<validationScript></validationScript>
+<contextDatabase>
+<disabled>0</disabled>
+<name>contextDatabase</name>
+<number>9</number>
+<prettyName>Job execution context database</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</contextDatabase>
+<contextLang>
+<disabled>0</disabled>
+<name>contextLang</name>
+<number>8</number>
+<prettyName>Job execution context lang</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</contextLang>
+<contextUser>
+<disabled>0</disabled>
+<name>contextUser</name>
+<number>7</number>
+<prettyName>Job execution context user</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</contextUser>
+<cron>
+<disabled>0</disabled>
+<name>cron</name>
+<number>5</number>
+<prettyName>Cron Expression</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</cron>
+<jobClass>
+<disabled>0</disabled>
+<name>jobClass</name>
+<number>3</number>
+<prettyName>Job Class</prettyName>
+<size>60</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</jobClass>
+<jobDescription>
+<disabled>0</disabled>
+<name>jobDescription</name>
+<number>2</number>
+<prettyName>Job Description</prettyName>
+<rows>10</rows>
+<size>45</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+</jobDescription>
+<jobName>
+<disabled>0</disabled>
+<name>jobName</name>
+<number>1</number>
+<prettyName>Job Name</prettyName>
+<size>60</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</jobName>
+<script>
+<disabled>0</disabled>
+<editor>PureText</editor>
+<name>script</name>
+<number>6</number>
+<prettyName>Job Script</prettyName>
+<rows>10</rows>
+<size>60</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+</script>
+<status>
+<disabled>0</disabled>
+<name>status</name>
+<number>4</number>
+<prettyName>Status</prettyName>
+<size>30</size>
+<unmodifiable>0</unmodifiable>
+<classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+</status>
+</class>
+<name>Scheduler.Attachments Cleaning</name>
+<number>0</number>
+<className>XWiki.SchedulerJobClass</className>
+<guid>5e8f00a5-a5dc-48f3-940b-01a9b055adfe</guid>
+<property>
+<contextDatabase>xwiki</contextDatabase>
+</property>
+<property>
+<contextLang>fr</contextLang>
+</property>
+<property>
+<contextUser>XWiki.Admin</contextUser>
+</property>
+<property>
+<cron>0 0 5 * * ?</cron>
+</property>
+<property>
+<jobClass>com.xpn.xwiki.plugin.scheduler.GroovyJob</jobClass>
+</property>
+<property>
+<jobDescription>This scheduler job cleans every attachment older than 61 days, if the page where it's attached doesn't have any XWiki.KeeperClass object.</jobDescription>
+</property>
+<property>
+<jobName>Attachements Cleaning</jobName>
+</property>
+<property>
+<script>import java.text.SimpleDateFormat
+
+today = new Date()
+dateExp = today - 61
+
+formater = new SimpleDateFormat("yyyy-MM-dd")
+dateExp = formater.format(dateExp)
+
+xwql="SELECT doc.fullName,att.filename FROM XWikiDocument doc, XWikiAttachment att WHERE doc.id=att.docId AND att.date &lt; '$dateExp' AND att.author not like '%XWiki.Admin' " 
+result = services.get("query").xwql(xwql).execute()
+for ( r in result ) {
+  mydoc = xwiki.getDocument( r[0] )
+//  if attachment doesn't have any object like that, delete it
+  if ( ! mydoc.getObject("FTPCode.KeeperClass")  ) {
+    mydoc.document.removeAttachment( mydoc.getAttachment(r[1]).attachment )
+    mydoc.save()
+  }
+}</script>
+</property>
+<property>
+<status>Normal</status>
+</property>
+</object>
+<content>{{include document="XWiki.SchedulerJobSheet"/}}</content></xwikidoc>
