@@ -5,19 +5,19 @@
 <language></language>
 <defaultLanguage></defaultLanguage>
 <translation>0</translation>
-<parent>XWiki.AllAttachments</parent>
-<creator>XWiki.Admin</creator>
-<author>XWiki.Admin</author>
+<parent>Main.WebHome</parent>
+<creator>xwiki:XWiki.Admin</creator>
+<author>xwiki:XWiki.Admin</author>
 <customClass></customClass>
-<contentAuthor>XWiki.Admin</contentAuthor>
+<contentAuthor>xwiki:XWiki.Admin</contentAuthor>
 <creationDate>1403886040000</creationDate>
 <date>1404125942000</date>
 <contentUpdateDate>1404125942000</contentUpdateDate>
-<version>2.2</version>
+<version>1.1</version>
 <title>$services.localization.render('platform.index.attachmentsResults')</title>
 <defaultTemplate></defaultTemplate>
 <validationScript></validationScript>
-<comment>allow view right for XWiki.XWikiAllGroup</comment>
+<comment></comment>
 <minorEdit>true</minorEdit>
 <syntaxId>xwiki/2.0</syntaxId>
 <hidden>true</hidden>
